@@ -1,4 +1,5 @@
 # Sasa
+![travis build](https://travis-ci.org/jasmaa/sasa.svg?branch=master)
 
 Yet another React Native Mastodon client WIP
 
