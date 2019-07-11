@@ -1,0 +1,10 @@
+language: node_js
+
+node_js:
+  - node
+  - 'lts/*'
+
+cache: npm
+
+before_script:
+  - ./scripts/build.sh
