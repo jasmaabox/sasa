@@ -3,15 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "appium": "appium",
-    "build:android": "bash scripts/build-android.sh",
-    "build:ios": "bash scripts/build-ios.sh",
-    "test:android": "appium-helper --platform android",
-    "test:ios": "appium-helper --platform ios",
     "test": "jest",
-    "test:local-e2e": "bash OS=both scripts/run-local-tests.sh",
-    "run-emulator:android": "bash scripts/run-android-emulator.sh",
-    "kill-emulator:android": "bash scripts/kill-android-emulator.sh",
     "lint": "eslint ."
   },
   "dependencies": {
@@ -29,17 +21,12 @@
     "@babel/core": "7.5.0",
     "@babel/runtime": "7.5.3",
     "@react-native-community/eslint-config": "0.0.3",
-    "appium": "^1.14.0",
     "babel-jest": "24.8.0",
     "eslint": "6.0.1",
     "jest": "24.8.0",
     "jetifier": "^1.6.1",
     "metro-react-native-babel-preset": "0.54.1",
-    "prop-types": "^15.7.2",
-    "react-test-renderer": "16.8.6",
-    "tape-async": "^2.3.0",
-    "tipsi-appium-helper": "^2.1.5",
-    "webdriverio": "^5.11.1"
+    "react-test-renderer": "16.8.6"
   },
   "jest": {
     "preset": "react-native"
