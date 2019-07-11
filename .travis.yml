@@ -2,5 +2,20 @@ matrix:
   include:
     - language: node_js
       node_js:
-        - "10"
-      script: scripts/build-app.sh
+        - 10
+      install: 
+        - ./scripts/setup.sh
+      script:
+        - npm test
+        
+    - language: android
+      dist: trusty
+      android:
+        components:
+          - build-tools-26.0.2
+          - android-26
+          - extra
+      before_script:
+        - cd ./android
+      script:
+        - ./gradlew assembleDebug

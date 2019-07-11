@@ -4,6 +4,8 @@
   "private": true,
   "scripts": {
     "test": "jest",
+	"build:android-debug": "cd ./android && bash ./gradlew assembleDebug",
+	"build:android-release": "cd ./android && bash ./gradlew assembleRelease",
     "lint": "eslint ."
   },
   "dependencies": {
