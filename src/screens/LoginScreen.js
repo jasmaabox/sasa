@@ -43,8 +43,8 @@ export class LoginScreen extends React.Component {
                         onPress={() => {
                             let M = new Mastodon(this.state.baseurl);
                             M.init()
-                                .then(()=>M.register_app())
-                                .then(()=>M.prompt_auth_code())
+                                .then(()=>M.registerApp())
+                                .then(()=>M.promptAuthCode())
                                 .then(()=>{
                                     this.props.navigation.navigate('CodeLogin', {M: M});
                                 })
@@ -60,7 +60,7 @@ export class LoginScreen extends React.Component {
                         onPress={() => {
                             let M = new Mastodon(this.state.baseurl);
                             M.init()
-                                .then(()=>M.register_app())
+                                .then(()=>M.registerApp())
                                 .then(()=>{
                                     this.props.navigation.navigate('CredLogin', {M: M});
                                 })

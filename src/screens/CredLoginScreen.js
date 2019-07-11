@@ -56,7 +56,7 @@ export class CredLoginScreen extends React.Component {
                     type="outline"
                     containerStyle={styles.widget}
                     onPress={() => {
-                        M.auth_account_creds(this.state.email, this.state.password)
+                        M.authAccountCreds(this.state.email, this.state.password)
                             .then(()=>{
                                 this.props.navigation.navigate("Home", {M: M})
                             })

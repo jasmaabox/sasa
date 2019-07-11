@@ -14,13 +14,13 @@ export class InitScreen extends React.Component {
      * Check if logged in
      */
     async init(){
-        let login_info = await CacheStore.get("login_info");
+        const loginInfo = await CacheStore.get("loginInfo");
 
-        if(login_info != null){
-            let M = new Mastodon(login_info['baseurl']);
+        if(loginInfo != null){
+            let M = new Mastodon(loginInfo['baseurl']);
             await M.init();
-            await M.register_app();
-            M.access_token = login_info['access_token'];
+            await M.registerApp();
+            M.accessToken = loginInfo['accessToken'];
 
             this.props.navigation.navigate('Home', {M: M});
         }

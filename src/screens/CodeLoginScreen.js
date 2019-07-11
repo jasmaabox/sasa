@@ -45,7 +45,7 @@ export class CodeLoginScreen extends React.Component {
                     type="outline"
                     containerStyle={styles.widget}
                     onPress={() => {
-                        M.auth_account_code(this.state.code)
+                        M.authAccountCode(this.state.code)
                             .then(()=>{
                                 this.props.navigation.navigate("Home", {M: M});
                             })
