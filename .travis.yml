@@ -7,17 +7,3 @@ matrix:
         - ./scripts/setup.sh
       script:
         - npm test
-        
-    - language: android
-      dist: trusty
-      android:
-        components:
-          - build-tools-26.0.2
-          - android-26
-          - extra
-      install: 
-        - ./scripts/setup.sh
-      before_script:
-        - cd ./android
-      script:
-        - ./gradlew assembleDebug

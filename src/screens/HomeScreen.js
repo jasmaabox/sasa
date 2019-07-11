@@ -15,6 +15,8 @@ export class HomeScreen extends React.Component {
     constructor(props){
         super(props);
 
+        this.props.removeClippedSubviews = true;
+
         this.state = {
             timeline: [],
             isRefreshing: true,
@@ -50,6 +52,36 @@ export class HomeScreen extends React.Component {
         this.initTimeline('home');
     }
 
+    /**
+     * Updates timeline with more statuses
+     */
+    fetchMore(){
+
+        if(this.state.isRefreshing){
+            return null;
+        }
+
+        this.setState(
+            (prevState) => {
+                return { isRefreshing: true };
+            },
+            () => {
+                const {navigation} = this.props;
+                let M = navigation.getParam('M');
+                let maxId = this.state.timeline[this.state.timeline.length-1]['id'];
+
+                M.getTimeline('home', {max_id: maxId})
+                    .then((res)=>{
+                        const newTimeline = this.state.timeline.concat(res['data']);
+                        this.setState({
+                            timeline: newTimeline,
+                            isRefreshing: false,
+                        });
+                    });
+            }
+        );
+    }
+
     render(){
 
         const {navigation} = this.props;
@@ -61,25 +93,9 @@ export class HomeScreen extends React.Component {
                 data={this.state.timeline}
                 onRefresh={() => this.onRefresh()}
                 refreshing={this.state.isRefreshing}
-                renderItem={({item}) => <StatusCard M={M} status={item} />}
+                renderItem={({item}) => (<StatusCard M={M} status={item} />)}
                 onEndReachedThreshold={0.1}
-                onEndReached={() => {
-
-                    // Extend timeline at end
-                    // FIX ME BUGGY!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                    const {navigation} = this.props;
-                    let M = navigation.getParam('M');
-
-                    let maxId = this.state.timeline[this.state.timeline.length-1]['id'];
-
-                    M.getTimeline('home', {max_id: maxId})
-                        .then((res)=>{
-                            const newTimeline = this.state.timeline.concat(res['data']);
-                            this.setState({
-                                timeline: newTimeline,
-                            });
-                        });
-                }}
+                onEndReached={()=>this.fetchMore()}
             />
         );
     }

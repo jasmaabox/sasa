@@ -7,6 +7,11 @@ import HTML from 'react-native-render-html';
 import { ImageDisplay } from './ImageDisplay';
 
 export class StatusCard extends React.PureComponent {
+
+    shouldComponentUpdate() {
+        return false
+    }
+
     render(){
         return(
             <Card containerStyle={{margin: 0}}>

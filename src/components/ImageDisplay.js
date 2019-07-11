@@ -8,6 +8,10 @@ import { Image } from 'react-native-elements';
  */
 export class ImageDisplay extends React.PureComponent {
 
+    shouldComponentUpdate() {
+        return false
+    }
+
     renderImages(){
         let images = [];
         for(let img of this.props.media){
