@@ -1,16 +1,13 @@
 
 import React from 'react';
-
 import { StyleSheet, FlatList, BackHandler, View } from 'react-native';
-import { Input, Button, Text } from 'react-native-elements';
 
-import { Mastodon } from '../networking/mastodon.js';
-import { StatusCard } from '../components/StatusCard.js';
+import StatusCard from '../components/StatusCard.js';
 
 /**
  * Home screen timeline
  */
-export class HomeScreen extends React.Component {
+export default class HomeScreen extends React.Component {
     
     constructor(props){
         super(props);

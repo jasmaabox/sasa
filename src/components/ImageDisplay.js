@@ -6,11 +6,7 @@ import { Image } from 'react-native-elements';
 /**
  * Status image display
  */
-export class ImageDisplay extends React.PureComponent {
-
-    shouldComponentUpdate() {
-        return false
-    }
+export default class ImageDisplay extends React.PureComponent {
 
     renderImages(){
         let images = [];

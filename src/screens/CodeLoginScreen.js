@@ -7,7 +7,7 @@ import { Input, Button, Text } from 'react-native-elements';
 /**
  * Authorization code login screen
  */
-export class CodeLoginScreen extends React.Component {
+export default class CodeLoginScreen extends React.Component {
     
     constructor(props){
         super(props);
@@ -47,7 +47,7 @@ export class CodeLoginScreen extends React.Component {
                     onPress={() => {
                         M.authAccountCode(this.state.code)
                             .then(()=>{
-                                this.props.navigation.navigate("Home", {M: M});
+                                this.props.navigation.navigate("LoginLanding", {M: M});
                             })
 
                             .catch((error)=>{

@@ -6,7 +6,7 @@ import {
 	LoginScreen,
 	CodeLoginScreen,
 	CredLoginScreen,
-	HomeScreen,
+	LoginLanding,
 } from './src/screens';
 
 const MainNavigator = createStackNavigator(
@@ -15,7 +15,7 @@ const MainNavigator = createStackNavigator(
 		Login: {screen: LoginScreen},
 		CredLogin: {screen: CredLoginScreen},
 		CodeLogin: {screen: CodeLoginScreen},
-		Home: {screen: HomeScreen},
+		LoginLanding: {screen: LoginLanding},
 	},
 	{
 		headerMode: 'none',

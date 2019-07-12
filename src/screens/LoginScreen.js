@@ -4,12 +4,12 @@ import { StyleSheet, View, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Input, Button, Text } from 'react-native-elements';
 
-import { Mastodon } from '../networking/mastodon.js';
+import Mastodon from '../networking/Mastodon';
 
 /**
- * Login screen landing
+ * Login screen
  */
-export class LoginScreen extends React.Component {
+export default class LoginScreen extends React.Component {
     
     constructor(props){
         super(props);

@@ -2,11 +2,12 @@
 import { Linking } from 'react-native';
 import CacheStore from 'react-native-cache-store';
 const axios = require('axios');
+const url = require('url');
 
 /**
  * Mastodon API
  */
-export class Mastodon {
+export default class Mastodon {
 
     constructor(baseurl){
         this.baseurl = baseurl;
@@ -135,6 +136,7 @@ export class Mastodon {
         CacheStore.remove("loginInfo");
     }
 
+
     async getTimeline(timeline, options={}){
         let response = await axios.get(
             `https://${this.baseurl}/api/v1/timelines/${timeline}`,
@@ -144,5 +146,19 @@ export class Mastodon {
             }
         );
         return response;
+    }
+
+    async openURL(href){
+
+        // Parse url
+        const parsed = url.parse(href);
+
+        if(parsed.host == this.baseurl){
+            console.log("Go to: " + parsed.pathname);
+        }
+        else{
+            // Open outside url
+            Linking.openURL(href);
+        }
     }
 }

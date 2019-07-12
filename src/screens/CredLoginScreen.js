@@ -7,7 +7,7 @@ import { Input, Button, Text } from 'react-native-elements';
 /**
  * Credential login screen
  */
-export class CredLoginScreen extends React.Component {
+export default class CredLoginScreen extends React.Component {
     
     constructor(props){
         super(props);
@@ -58,7 +58,7 @@ export class CredLoginScreen extends React.Component {
                     onPress={() => {
                         M.authAccountCreds(this.state.email, this.state.password)
                             .then(()=>{
-                                this.props.navigation.navigate("Home", {M: M})
+                                this.props.navigation.navigate("LoginLanding", {M: M})
                             })
 
                             .catch((error)=>{

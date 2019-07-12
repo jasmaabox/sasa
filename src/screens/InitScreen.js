@@ -3,12 +3,12 @@ import React from 'react';
 import { View } from 'react-native';
 import CacheStore from 'react-native-cache-store';
 
-import { Mastodon } from '../networking/mastodon.js';
+import Mastodon from '../networking/Mastodon';
 
 /**
  * Dummy screen to redirect to login
  */
-export class InitScreen extends React.Component {
+export default class InitScreen extends React.Component {
 
     /**
      * Check if logged in
@@ -22,7 +22,7 @@ export class InitScreen extends React.Component {
             await M.registerApp();
             M.accessToken = loginInfo['accessToken'];
 
-            this.props.navigation.navigate('Home', {M: M});
+            this.props.navigation.navigate('LoginLanding', {M: M});
         }
         else{
             this.props.navigation.navigate('Login');
