@@ -5,5 +5,3 @@ matrix:
         - 10
       install: 
         - ./scripts/setup.sh
-      script:
-        - npm test
