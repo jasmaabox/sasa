@@ -4,7 +4,7 @@ import { StyleSheet, View, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Input, Button, Text } from 'react-native-elements';
 
-import Mastodon from '../networking/Mastodon';
+import Mastodon from '../networking/Mastodon.js';
 
 /**
  * Login screen

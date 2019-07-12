@@ -4,7 +4,7 @@ import { View, Dimensions } from 'react-native';
 import { Avatar, Card, Text } from 'react-native-elements';
 import HTML from 'react-native-render-html';
 
-import ImageDisplay from './ImageDisplay';
+import ImageDisplay from './ImageDisplay.js';
 
 export default class StatusCard extends React.PureComponent {
 

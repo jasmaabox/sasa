@@ -3,7 +3,7 @@ import React from 'react';
 import { View } from 'react-native';
 import CacheStore from 'react-native-cache-store';
 
-import Mastodon from '../networking/Mastodon';
+import Mastodon from '../networking/Mastodon.js';
 
 /**
  * Dummy screen to redirect to login

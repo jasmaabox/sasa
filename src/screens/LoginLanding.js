@@ -3,8 +3,8 @@ import React from 'react';
 import { createBottomTabNavigator, createDrawerNavigator, createAppContainer } from 'react-navigation';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-import DummyScreen from './DummyScreen';
-import HomeScreen from './HomeScreen'
+import DummyScreen from './DummyScreen.js';
+import HomeScreen from './HomeScreen.js'
 
 const TabNavigator = createBottomTabNavigator({
     Feed: {
