@@ -1,7 +1,7 @@
 
 import React from 'react';
-import { ActivityIndicator } from 'react-native';
-import { Image } from 'react-native-elements';
+import { View, ActivityIndicator } from 'react-native';
+import FastImage from 'react-native-fast-image';
 
 /**
  * Status image display
@@ -12,9 +12,13 @@ export default class ImageDisplay extends React.PureComponent {
         let images = [];
         for(let img of this.props.media){
             images.push(
-                <Image
-                    source={{ uri: img['preview_url'] }}
-                    style={{ width: 200, height: 200, margin: 2 }}
+                <FastImage
+                    source={{
+                        uri: img['preview_url'],
+                        priority: FastImage.priority.normal,
+                    }}
+                    style={{ width: 200, height: 200, margin: 20 }}
+                    resizeMode={FastImage.resizeMode.contain}
                     PlaceholderContent={<ActivityIndicator />}
                 />
             );
@@ -23,6 +27,10 @@ export default class ImageDisplay extends React.PureComponent {
     }
 
     render(){
-        return this.renderImages();
+        return (
+            <View style={{ alignItems: 'center' }}>
+                {this.renderImages()}
+            </View>
+        );
     }
 }

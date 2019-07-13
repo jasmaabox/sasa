@@ -15,6 +15,7 @@ export default class HomeScreen extends React.Component {
         this.props.removeClippedSubviews = true;
 
         this.state = {
+            timelineName: 'home',
             timeline: [],
             isRefreshing: true,
         };
@@ -24,7 +25,7 @@ export default class HomeScreen extends React.Component {
         // Disable back button
         BackHandler.addEventListener('hardwareBackPress', ()=>{return true});
 
-        this.initTimeline('home');
+        this.initTimeline(this.state.timelineName);
 	}
 	
     componentWillUnmount() {
@@ -46,7 +47,7 @@ export default class HomeScreen extends React.Component {
         this.setState({
             isRefreshing: true,
         });
-        this.initTimeline('home');
+        this.initTimeline(this.state.timelineName);
     }
 
     /**
@@ -67,7 +68,7 @@ export default class HomeScreen extends React.Component {
                 let M = navigation.getParam('M');
                 let maxId = this.state.timeline[this.state.timeline.length-1]['id'];
 
-                M.getTimeline('home', {max_id: maxId})
+                M.getTimeline(this.state.timelineName, {max_id: maxId})
                     .then((res)=>{
                         const newTimeline = this.state.timeline.concat(res['data']);
                         this.setState({

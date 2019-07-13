@@ -12,7 +12,7 @@ const TabNavigator = createBottomTabNavigator({
         navigationOptions: {
             tabBarLabel: "Feed",
             tabBarIcon: ({ tintColor }) => (
-              <Icon name="home" size={25} />
+              <Icon name="home" size={25} color={tintColor} />
             )
           },
     },
