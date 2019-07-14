@@ -138,6 +138,12 @@ export default class Mastodon {
     }
 
 
+    /**
+     * Gets timeline
+     * 
+     * @param {string} timeline 
+     * @param {Object} options 
+     */
     async getTimeline(timeline, options={}){
         let response = await axios.get(
             `https://${this.baseurl}/api/v1/timelines/${timeline}`,
@@ -149,6 +155,11 @@ export default class Mastodon {
         return response;
     }
 
+    /**
+     * Opens url
+     * 
+     * @param {string} href 
+     */
     async openURL(href){
 
         // Parse url
@@ -161,5 +172,21 @@ export default class Mastodon {
             // Open outside url
             Linking.openURL(href);
         }
+    }
+
+    /**
+     * Gets replies to a status
+     * 
+     * @param {string} id - Target status id
+     */
+    async getRepliesTo(id){
+        let response = await axios.get(
+            `https://${this.baseurl}/api/v1/statuses/${id}/context`,
+            {
+                headers: {'Authorization': `Bearer ${this.accessToken}`},
+            }
+        );
+        console.log(response);
+        return response['data']['descendants'];
     }
 }

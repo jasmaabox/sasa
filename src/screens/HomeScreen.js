@@ -1,8 +1,10 @@
 
 import React from 'react';
-import { StyleSheet, FlatList, BackHandler, View } from 'react-native';
+import { FlatList, BackHandler, TouchableOpacity, Text, View } from 'react-native';
+import { Card, Overlay } from 'react-native-elements';
 
-import StatusCard from '../components/StatusCard.js';
+import StatusDisplay from '../components/StatusDisplay.js';
+import StatusOverlayDisplay from '../components/StatusOverlayDisplay.js';
 
 /**
  * Home screen timeline
@@ -18,6 +20,8 @@ export default class HomeScreen extends React.Component {
             timelineName: 'home',
             timeline: [],
             isRefreshing: true,
+            isShowOverlay: false,
+            currentStatus: null,
         };
     }
 
@@ -32,6 +36,10 @@ export default class HomeScreen extends React.Component {
         BackHandler.removeEventListener('hardwareBackPress', ()=>{return true});
     }
 
+    /**
+     * Init timline
+     * @param {string} timeline 
+     */
     async initTimeline(timeline){
         const {navigation} = this.props;
         let M = navigation.getParam('M');
@@ -43,6 +51,9 @@ export default class HomeScreen extends React.Component {
         });
     }
 
+    /**
+     * Re-inits timeline on refresh
+     */
     onRefresh(){
         this.setState({
             isRefreshing: true,
@@ -86,21 +97,35 @@ export default class HomeScreen extends React.Component {
         let M = navigation.getParam('M');
 
         return (
-            <FlatList
-                style={styles.mainContainer}
-                data={this.state.timeline}
-                onRefresh={() => this.onRefresh()}
-                refreshing={this.state.isRefreshing}
-                renderItem={({item}) => (<StatusCard M={M} status={item} />)}
-                onEndReachedThreshold={0.1}
-                onEndReached={()=>this.fetchMore()}
-            />
+
+            <View style={{ flex: 1 }}>
+
+                <Overlay isVisible={this.state.isShowOverlay} onBackdropPress={() => this.setState({ isShowOverlay: false })}>
+                    <StatusOverlayDisplay status={this.state.currentStatus} M={M} />
+                </Overlay>
+
+                <FlatList
+                    style={{ flex: 1 }}
+                    data={this.state.timeline}
+                    onRefresh={() => this.onRefresh()}
+                    refreshing={this.state.isRefreshing}
+                    renderItem={({item}) => (
+                        <TouchableOpacity onPress={()=>{
+                             // Get current status
+                            this.setState({
+                                currentStatus: item,
+                                isShowOverlay: true,
+                            });
+                        }}>
+                            <Card containerStyle={{margin: 0}}>
+                                <StatusDisplay M={M} status={item} />
+                            </Card>
+                        </TouchableOpacity>
+                    )}
+                    onEndReachedThreshold={0.1}
+                    onEndReached={()=>this.fetchMore()}
+                />
+            </View>
         );
     }
 }
-
-const styles = StyleSheet.create({
-    mainContainer: {
-        flex: 1,
-    }
-});
