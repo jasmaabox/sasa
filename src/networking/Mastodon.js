@@ -175,17 +175,28 @@ export default class Mastodon {
     }
 
     /**
-     * Gets replies to a status
+     * Gets replies and ancestors to a status
      * 
      * @param {string} id - Target status id
      */
-    async getRepliesTo(id){
+    async getContextTo(id){
         const response = await axios.get(
             `https://${this.baseurl}/api/v1/statuses/${id}/context`,
             {
                 headers: {'Authorization': `Bearer ${this.accessToken}`},
             }
         );
-        return response['data']['descendants'];
+        return response['data'];
+    }
+
+
+    async getStatus(id){
+        const response = await axios.get(
+            `https://${this.baseurl}/api/v1/statuses/${id}`,
+            {
+                headers: {'Authorization': `Bearer ${this.accessToken}`},
+            }
+        );
+        return response['data'];
     }
 }

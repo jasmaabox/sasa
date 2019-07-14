@@ -1,13 +1,13 @@
 
 import React from 'react';
-import { View, FlatList, TouchableOpacity } from 'react-native';
-import { Divider } from 'react-native-elements';
+import { View, FlatList, TouchableOpacity, ScrollView } from 'react-native';
+import { Card, Divider } from 'react-native-elements';
 import GestureRecognizer, { swipeDirections } from 'react-native-swipe-gestures';
 
 import StatusDisplay from '../components/StatusDisplay.js'
 
 /**
- * Screen to display single status
+ * Screen to display status and responses
  */
 export default class StatusScreen extends React.PureComponent {
 
@@ -29,9 +29,9 @@ export default class StatusScreen extends React.PureComponent {
         const M = navigation.getParam('M');
         const status = navigation.getParam('status');
 
-        const result = await M.getRepliesTo(status['id'])
+        const result = await M.getContextTo(status['id'])
         this.setState({
-            replies: result,
+            replies: result['descendants'],
             isRefreshing: false,
         });
     }
@@ -53,25 +53,26 @@ export default class StatusScreen extends React.PureComponent {
                 config={config}
                 style={{ flex: 1 }}
             >
-
-                <StatusDisplay M={M} status={status} />
-
-                <FlatList
-                    style={{ flex: 1 }}
-                    data={this.state.replies}
-                    refreshing={this.state.isRefreshing}
-                    renderItem={({ item }) => (
-                        <TouchableOpacity onPress={() => {
-                            this.props.navigation.navigate({
-                                routeName: 'StatusScreen',
-                                params: { M: M, status: item },
-                                key: item['id'],
-                            });
-                        }}>
-                            <StatusDisplay M={M} status={item} />
-                        </TouchableOpacity>
-                    )}
-                />
+                <ScrollView>
+                    <StatusDisplay M={M} status={status} isShowTopText={true} />
+                    <Divider style={{ backgroundColor: 'lightgray', height: 5 }} />
+                    <FlatList
+                        style={{ flex: 1 }}
+                        data={this.state.replies}
+                        refreshing={this.state.isRefreshing}
+                        renderItem={({ item }) => (
+                            <TouchableOpacity onPress={() => {
+                                this.props.navigation.navigate({
+                                    routeName: 'StatusScreen',
+                                    params: { M: M, status: item },
+                                    key: item['id'],
+                                });
+                            }}>
+                                <StatusDisplay M={M} status={item} color='gainsboro' />
+                            </TouchableOpacity>
+                        )}
+                    />
+                </ScrollView>
             </GestureRecognizer>
         );
     }

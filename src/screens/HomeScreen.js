@@ -109,7 +109,7 @@ export default class HomeScreen extends React.Component {
                                 key: item['id'],
                             });
                         }}>
-                            <StatusDisplay M={M} status={item} />
+                            <StatusDisplay M={M} status={item} isShowTopText={true} />
                         </TouchableOpacity>
                     )}
                     onEndReachedThreshold={0.1}

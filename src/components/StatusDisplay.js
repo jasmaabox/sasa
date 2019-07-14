@@ -8,17 +8,50 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { getTimePassedStr } from '../utils/utils.js';
 import ImageDisplay from './ImageDisplay.js';
 
+/**
+ * Display card for individual status
+ */
 export default class StatusDisplay extends React.PureComponent {
 
+    renderTopText(){
+        if(this.props.isShowTopText && this.props.status['reblog']){
+            return (
+                <View style={{ flexDirection: 'row', alignItems: 'center', margin: 15 }}>
+                    <Icon name="reply" size={15} color='grey' />
+                    <Text style={{ color: 'grey' }}>{` ${this.props.status['account']['display_name']} boosted`}</Text>
+                </View>
+            );
+        }
+        else if(this.props.isShowTopText && this.props.status['in_reply_to_account_id']){
+            return (
+                <View style={{ flexDirection: 'row', alignItems: 'center', margin: 15 }}>
+                    <Icon name="reply" size={15} color='grey' />
+                    <Text style={{ color: 'grey' }}>{` ${this.props.status['account']['display_name']} replied to ${this.props.status['in_reply_to_account_id']}`}</Text>
+                </View>
+            );
+        }
+        else{
+            return (
+                <View></View>
+            );
+        }
+    }
+
     render() {
+
+        const displayStatus = this.props.status['reblog'] ? this.props.status['reblog'] : this.props.status;
+
         return (
-            <Card containerStyle={{margin: 0}}>
+            <Card containerStyle={{margin: 0, backgroundColor: this.props.color }}>
+                 
+                {this.renderTopText()}
+
                 <View style={{ flexDirection: 'row' }}>
                     <Avatar
                         size="medium"
                         rounded
                         source={{
-                            uri: this.props.status['account']['avatar']
+                            uri: displayStatus['account']['avatar']
                         }}
                     />
 
@@ -26,21 +59,21 @@ export default class StatusDisplay extends React.PureComponent {
 
                         <View style={{ flexDirection: 'row' }}>
                             <Text numberOfLines={1} style={{ flex: 1 }}>
-                                <Text>{this.props.status['account']['display_name'] ? this.props.status['account']['display_name'] + ' ' : ''}</Text>
-                                <Text style={{ color: 'grey' }}>@{this.props.status['account']['username']}</Text>
+                                <Text>{displayStatus['account']['display_name'] ? displayStatus['account']['display_name'] + ' ' : ''}</Text>
+                                <Text style={{ color: 'grey' }}>@{displayStatus['account']['username']}</Text>
                             </Text>
                             <Text style={{ color: 'grey' }}> {getTimePassedStr(new Date(this.props.status['created_at']))}</Text>
                         </View>
 
                         <HTML
-                            html={`<div>${this.props.status['content']}</div>`}
+                            html={`<div>${displayStatus['content']}</div>`}
                             imagesMaxWidth={Dimensions.get('window').width}
                             onLinkPress={(event, href) => {
                                 this.props.M.openURL(href);
                             }}
                         />
 
-                        <ImageDisplay media={this.props.status['media_attachments']} />
+                        <ImageDisplay media={displayStatus['media_attachments']} />
 
                         <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginRight: 50 }}>
                             <TouchableOpacity style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
