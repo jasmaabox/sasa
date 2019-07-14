@@ -4,6 +4,7 @@ import LoginScreen from './LoginScreen.js';
 import CredLoginScreen from './CredLoginScreen.js';
 import CodeLoginScreen from './CodeLoginScreen.js';
 import LoginLanding from './LoginLanding.js';
+import StatusScreen from './StatusScreen.js';
 
 export {
     InitScreen,
@@ -11,4 +12,5 @@ export {
     CodeLoginScreen,
     CredLoginScreen,
     LoginLanding,
+    StatusScreen,
 }

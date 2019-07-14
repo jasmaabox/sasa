@@ -20,7 +20,7 @@ export default class CredLoginScreen extends React.Component {
 
     render() {
         const {navigation} = this.props;
-        let M = navigation.getParam('M');
+        const M = navigation.getParam('M');
 
         return (
             <View style={styles.mainContainer}>

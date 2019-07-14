@@ -4,7 +4,6 @@ import { FlatList, BackHandler, TouchableOpacity, Text, View } from 'react-nativ
 import { Card, Overlay } from 'react-native-elements';
 
 import StatusDisplay from '../components/StatusDisplay.js';
-import StatusOverlayDisplay from '../components/StatusOverlayDisplay.js';
 
 /**
  * Home screen timeline
@@ -20,8 +19,6 @@ export default class HomeScreen extends React.Component {
             timelineName: 'home',
             timeline: [],
             isRefreshing: true,
-            isShowOverlay: false,
-            currentStatus: null,
         };
     }
 
@@ -42,9 +39,9 @@ export default class HomeScreen extends React.Component {
      */
     async initTimeline(timeline){
         const {navigation} = this.props;
-        let M = navigation.getParam('M');
+        const M = navigation.getParam('M');
         
-        let result = await M.getTimeline(timeline);
+        const result = await M.getTimeline(timeline);
         this.setState({
             timeline: result['data'],
             isRefreshing: false,
@@ -94,16 +91,11 @@ export default class HomeScreen extends React.Component {
     render(){
 
         const {navigation} = this.props;
-        let M = navigation.getParam('M');
+        const M = navigation.getParam('M');
 
         return (
 
             <View style={{ flex: 1 }}>
-
-                <Overlay isVisible={this.state.isShowOverlay} onBackdropPress={() => this.setState({ isShowOverlay: false })}>
-                    <StatusOverlayDisplay status={this.state.currentStatus} M={M} />
-                </Overlay>
-
                 <FlatList
                     style={{ flex: 1 }}
                     data={this.state.timeline}
@@ -111,15 +103,13 @@ export default class HomeScreen extends React.Component {
                     refreshing={this.state.isRefreshing}
                     renderItem={({item}) => (
                         <TouchableOpacity onPress={()=>{
-                             // Get current status
-                            this.setState({
-                                currentStatus: item,
-                                isShowOverlay: true,
+                            this.props.navigation.navigate({
+                                routeName: 'StatusScreen',
+                                params: {M: M, status: item},
+                                key: item['id'],
                             });
                         }}>
-                            <Card containerStyle={{margin: 0}}>
-                                <StatusDisplay M={M} status={item} />
-                            </Card>
+                            <StatusDisplay M={M} status={item} />
                         </TouchableOpacity>
                     )}
                     onEndReachedThreshold={0.1}

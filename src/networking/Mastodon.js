@@ -30,7 +30,7 @@ export default class Mastodon {
         }
 
         // Retrieves client creds
-        let clientIdDict = await CacheStore.get("clientIdDict");
+        const clientIdDict = await CacheStore.get("clientIdDict");
         if(clientIdDict == null){
             CacheStore.set('clientIdDict', {});
         }
@@ -38,7 +38,7 @@ export default class Mastodon {
             this.clientId = clientIdDict[this.baseurl];
         }
 
-        let clientSecretDict = await CacheStore.get("clientSecretDict");
+        const clientSecretDict = await CacheStore.get("clientSecretDict");
         if(clientSecretDict == null){
             CacheStore.set('clientSecretDict', {});
         }
@@ -57,7 +57,7 @@ export default class Mastodon {
         }
 
         // Registers app if creds not cached
-        let response = await axios.post(`https://${this.baseurl}/api/v1/apps`, {
+        const response = await axios.post(`https://${this.baseurl}/api/v1/apps`, {
             client_name: 'Sasa Mastodon Client',
             redirect_uris: 'urn:ietf:wg:oauth:2.0:oob',
             scopes: 'read write follow',
@@ -66,11 +66,11 @@ export default class Mastodon {
         this.clientSecret = response['data']['client_secret'];
         
         // Cache client creds
-        let clientIdDict = await CacheStore.get('clientIdDict');
+        const clientIdDict = await CacheStore.get('clientIdDict');
         clientIdDict[this.baseurl] = this.clientId;
         CacheStore.set("clientIdDict", clientIdDict);
 
-        let clientSecretDict = await CacheStore.get('clientSecretDict');
+        const clientSecretDict = await CacheStore.get('clientSecretDict');
         clientSecretDict[this.baseurl] = this.clientSecret;
         CacheStore.set("clientSecretDict", clientSecretDict);
     }
@@ -88,7 +88,7 @@ export default class Mastodon {
      * @param {string} password 
      */
 	async authAccountCreds(email, password){
-		let response = await axios.post(`https://${this.baseurl}/oauth/token`, {
+		const response = await axios.post(`https://${this.baseurl}/oauth/token`, {
 			client_id: this.clientId,
 			client_secret: this.clientSecret,
 			grant_type: 'password',
@@ -100,7 +100,7 @@ export default class Mastodon {
         this.accessToken = response['data']['access_token'];
         
         // Cache login info
-        let loginInfo = {
+        const loginInfo = {
             baseurl: this.baseurl,
             accessToken: this.accessToken,
         };
@@ -112,7 +112,7 @@ export default class Mastodon {
      * @param {string} code 
      */
     async authAccountCode(code){
-		let response = await axios.post(`https://${this.baseurl}/oauth/token`, {
+		const response = await axios.post(`https://${this.baseurl}/oauth/token`, {
 			client_id: this.clientId,
 			client_secret: this.clientSecret,
 			grant_type: 'authorization_code',
@@ -123,7 +123,7 @@ export default class Mastodon {
         this.accessToken = response['data']['access_token'];
         
         // Cache login info
-        let loginInfo = {
+        const loginInfo = {
             baseurl: this.baseurl,
             accessToken: this.accessToken,
         };
@@ -145,7 +145,7 @@ export default class Mastodon {
      * @param {Object} options 
      */
     async getTimeline(timeline, options={}){
-        let response = await axios.get(
+        const response = await axios.get(
             `https://${this.baseurl}/api/v1/timelines/${timeline}`,
             {
                 headers: {'Authorization': `Bearer ${this.accessToken}`},
@@ -180,13 +180,12 @@ export default class Mastodon {
      * @param {string} id - Target status id
      */
     async getRepliesTo(id){
-        let response = await axios.get(
+        const response = await axios.get(
             `https://${this.baseurl}/api/v1/statuses/${id}/context`,
             {
                 headers: {'Authorization': `Bearer ${this.accessToken}`},
             }
         );
-        console.log(response);
         return response['data']['descendants'];
     }
 }

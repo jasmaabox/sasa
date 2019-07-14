@@ -19,7 +19,7 @@ export default class CodeLoginScreen extends React.Component {
 
     render() {
         const {navigation} = this.props;
-        let M = navigation.getParam('M');
+        const M = navigation.getParam('M');
 
         return (
             <View style={styles.mainContainer}>
