@@ -8,9 +8,9 @@ import FastImage from 'react-native-fast-image';
  */
 export default class ImageDisplay extends React.PureComponent {
 
-    renderImages(){
+    renderImages() {
         let images = [];
-        for(let img of this.props.media){
+        for (let img of this.props.media) {
             images.push(
                 <FastImage
                     source={{
@@ -26,11 +26,39 @@ export default class ImageDisplay extends React.PureComponent {
         return images;
     }
 
-    render(){
+    renderImage({ item, index }) {
         return (
-            <View style={{ alignItems: 'center',  margin: 20 }}>
-                {this.renderImages()}
-            </View>
+            <FastImage
+                source={{
+                    uri: item['preview_url'],
+                    priority: FastImage.priority.normal,
+                }}
+                style={{ width: 300, height: 300 }}
+                resizeMode={FastImage.resizeMode.contain}
+                PlaceholderContent={<ActivityIndicator />}
+            />
+        );
+    }
+
+    generateImagesList() {
+        let imgs = [];
+        for(item of this.props.media){
+            imgs.push({
+                source: {uri: item['preview_url']},
+                width: 300,
+                height: 300,
+            });
+        }
+        return imgs;
+    }
+
+    render() {
+        return (
+            <ImageView
+                images={this.generateImagesList()}
+                imageIndex={0}
+                isVisible={this.state.isImageViewVisible}
+            />
         );
     }
 }

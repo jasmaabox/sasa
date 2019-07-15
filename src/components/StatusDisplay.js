@@ -1,9 +1,10 @@
 
 import React from 'react';
 import { View, Dimensions, TouchableOpacity } from 'react-native';
-import { Avatar, Card, Text } from 'react-native-elements';
+import { Avatar, Card, Text, Overlay, Button } from 'react-native-elements';
 import HTML from 'react-native-render-html';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import ImageView from 'react-native-image-view';
 
 import { getTimePassedStr } from '../utils/utils.js';
 import ImageDisplay from './ImageDisplay.js';
@@ -13,8 +14,15 @@ import ImageDisplay from './ImageDisplay.js';
  */
 export default class StatusDisplay extends React.PureComponent {
 
-    renderTopText(){
-        if(this.props.isShowTopText && this.props.status['reblog']){
+    constructor(props) {
+        super(props);
+        this.state = {
+            isOverlayVisible: false,
+        };
+    }
+
+    renderTopText() {
+        if (this.props.isShowTopText && this.props.status['reblog']) {
             return (
                 <View style={{ flexDirection: 'row', alignItems: 'center', margin: 15 }}>
                     <Icon name="reply" size={15} color='grey' />
@@ -22,7 +30,7 @@ export default class StatusDisplay extends React.PureComponent {
                 </View>
             );
         }
-        else if(this.props.isShowTopText && this.props.status['in_reply_to_account_id']){
+        else if (this.props.isShowTopText && this.props.status['in_reply_to_account_id']) {
             return (
                 <View style={{ flexDirection: 'row', alignItems: 'center', margin: 15 }}>
                     <Icon name="reply" size={15} color='grey' />
@@ -30,11 +38,34 @@ export default class StatusDisplay extends React.PureComponent {
                 </View>
             );
         }
-        else{
+        else {
             return (
                 <View></View>
             );
         }
+    }
+
+    renderImageDisplay(status) {
+
+        // FIX ME!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+        // Generate data
+        let imgs = [];
+        for (item of status['media_attachments']) {
+            imgs.push({
+                source: { uri: item['preview_url'] },
+                width: 300,
+                height: 300,
+            });
+        }
+
+        return (
+            <ImageView
+                images={imgs}
+                imageIndex={0}
+                isVisible={this.state.isOverlayVisible}
+            />
+        );
     }
 
     render() {
@@ -42,8 +73,8 @@ export default class StatusDisplay extends React.PureComponent {
         const displayStatus = this.props.status['reblog'] ? this.props.status['reblog'] : this.props.status;
 
         return (
-            <Card containerStyle={{margin: 0, backgroundColor: this.props.color }}>
-                 
+            <Card containerStyle={{ margin: 0, backgroundColor: this.props.color }}>
+
                 {this.renderTopText()}
 
                 <View style={{ flexDirection: 'row' }}>
@@ -73,7 +104,12 @@ export default class StatusDisplay extends React.PureComponent {
                             }}
                         />
 
-                        <ImageDisplay media={displayStatus['media_attachments']} />
+                        {this.renderImageDisplay(displayStatus)}
+                        <Button
+                            title="Press me"
+                            onPress={() => this.setState({ isOverlayVisible: true })}
+                        />
+                        
 
                         <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginRight: 50 }}>
                             <TouchableOpacity style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
@@ -95,7 +131,7 @@ export default class StatusDisplay extends React.PureComponent {
                                 <Icon name="ellipsis-h" size={15} color='grey' />
                             </TouchableOpacity>
                         </View>
-                        
+
                     </View>
                 </View>
             </Card>
