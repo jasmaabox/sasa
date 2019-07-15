@@ -1,13 +1,13 @@
 
 import React from 'react';
-import { View, Dimensions, TouchableOpacity } from 'react-native';
+import { View, Dimensions, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { Avatar, Card, Text, Overlay, Button } from 'react-native-elements';
 import HTML from 'react-native-render-html';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import ImageView from 'react-native-image-view';
+import FastImage from 'react-native-fast-image';
 
 import { getTimePassedStr } from '../utils/utils.js';
-import ImageDisplay from './ImageDisplay.js';
 
 /**
  * Display card for individual status
@@ -21,6 +21,9 @@ export default class StatusDisplay extends React.PureComponent {
         };
     }
 
+    /**
+     * Renders top text indicating status as a response or reblog
+     */
     renderTopText() {
         if (this.props.isShowTopText && this.props.status['reblog']) {
             return (
@@ -45,31 +48,60 @@ export default class StatusDisplay extends React.PureComponent {
         }
     }
 
+    /**
+     * Renders image display
+     * @param {Object} status 
+     */
     renderImageDisplay(status) {
 
-        // FIX ME!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        if(status['media_attachments'].length == 0){
+            return(<View></View>);
+        }
 
         // Generate data
         let imgs = [];
+        let count = 0;
         for (item of status['media_attachments']) {
-            imgs.push({
-                source: { uri: item['preview_url'] },
-                width: 300,
-                height: 300,
-            });
+            if(item['type'] == 'image'){
+                imgs.push({
+                    source: { uri: item['preview_url'] },
+                    width: item['meta']['width'],
+                    height: item['meta']['height'],
+                    count: count++,
+                });
+            }
         }
 
         return (
-            <ImageView
-                images={imgs}
-                imageIndex={0}
-                isVisible={this.state.isOverlayVisible}
-            />
+            <View>
+                <ImageView
+                    images={imgs}
+                    imageIndex={0}
+                    isVisible={this.state.isOverlayVisible}
+                    onClose={()=>this.setState({isOverlayVisible: false})}
+                    renderFooter={(currentImage) => (<View><Text>{currentImage['count']}</Text></View>)}
+                />
+                <TouchableOpacity
+                    style={{ justifyContent: 'center', alignItems: 'center' }}
+                    onPress={() => this.setState({ isOverlayVisible: true })}
+                >
+                    <FastImage
+                        source={{
+                            uri: status['media_attachments'][0]['preview_url'],
+                            priority: FastImage.priority.normal,
+                        }}
+                        style={{ width: 300, height: 300, margin: 20 }}
+                        resizeMode={FastImage.resizeMode.contain}
+                        PlaceholderContent={<ActivityIndicator />}
+                    />
+                </TouchableOpacity>
+            </View>
         );
     }
 
     render() {
 
+        // Switch status if reblog
         const displayStatus = this.props.status['reblog'] ? this.props.status['reblog'] : this.props.status;
 
         return (
@@ -105,11 +137,6 @@ export default class StatusDisplay extends React.PureComponent {
                         />
 
                         {this.renderImageDisplay(displayStatus)}
-                        <Button
-                            title="Press me"
-                            onPress={() => this.setState({ isOverlayVisible: true })}
-                        />
-                        
 
                         <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginRight: 50 }}>
                             <TouchableOpacity style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
