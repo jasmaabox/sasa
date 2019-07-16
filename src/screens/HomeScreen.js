@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { FlatList, BackHandler, TouchableOpacity, Text, View } from 'react-native';
+import { FlatList, BackHandler, TouchableOpacity, Text, View, Alert } from 'react-native';
 import { Card, Overlay } from 'react-native-elements';
 
 import StatusDisplay from '../components/StatusDisplay.js';
@@ -43,7 +43,7 @@ export default class HomeScreen extends React.Component {
         
         const result = await M.getTimeline(timeline);
         this.setState({
-            timeline: result['data'],
+            timeline: result,
             isRefreshing: false,
         });
     }
@@ -53,6 +53,7 @@ export default class HomeScreen extends React.Component {
      */
     onRefresh(){
         this.setState({
+            //timeline: [],
             isRefreshing: true,
         });
         this.initTimeline(this.state.timelineName);
@@ -78,7 +79,7 @@ export default class HomeScreen extends React.Component {
 
                 M.getTimeline(this.state.timelineName, {max_id: maxId})
                     .then((res)=>{
-                        const newTimeline = this.state.timeline.concat(res['data']);
+                        const newTimeline = this.state.timeline.concat(res);
                         this.setState({
                             timeline: newTimeline,
                             isRefreshing: false,
@@ -107,7 +108,19 @@ export default class HomeScreen extends React.Component {
                             const displayStatus = item['reblog'] ? item['reblog'] : item;
                             this.props.navigation.navigate({
                                 routeName: 'StatusScreen',
-                                params: {M: M, id: displayStatus['id']},
+                                params: {
+                                    M: M,
+                                    id: displayStatus['id'],
+                                    onGoBack: ()=>{
+                                        M.getStatus(item['id'])
+                                            .then((newStatus)=>{
+                                                const idx = this.state.timeline.findIndex(obj => obj['id'] == item['id']);
+                                                this.state.timeline[idx] = newStatus;
+                                            
+                                                this.setState({ timeline: this.state.timeline });
+                                            });
+                                    },
+                                },
                                 key: displayStatus['id'],
                             });
                         }}>

@@ -58,7 +58,9 @@ export default class StatusScreen extends React.PureComponent {
      * @param {*} gestureState 
      */
     onSwipeRight(gestureState) {
-        this.props.navigation.goBack(null)
+        const { navigation } = this.props;
+        navigation.state.params.onGoBack();
+        navigation.goBack(null);
     }
 
 

@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { View, Dimensions, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
+import { View, Dimensions, TouchableOpacity, ActivityIndicator, Alert, Image } from 'react-native';
 import { Avatar, Card, Text, Overlay, Button } from 'react-native-elements';
 import HTML from 'react-native-render-html';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -56,15 +56,15 @@ export default class StatusDisplay extends React.PureComponent {
      */
     renderImageDisplay(status) {
 
-        if(status['media_attachments'].length == 0){
-            return(<View></View>);
+        if (status['media_attachments'].length == 0) {
+            return (<View></View>);
         }
 
         // Generate data
         let imgs = [];
         let count = 0;
         for (item of status['media_attachments']) {
-            if(item['type'] == 'image'){
+            if (item['type'] == 'image') {
                 imgs.push({
                     source: { uri: item['preview_url'] },
                     width: item['meta']['width'],
@@ -80,28 +80,28 @@ export default class StatusDisplay extends React.PureComponent {
                     images={imgs}
                     imageIndex={0}
                     isVisible={this.state.isOverlayVisible}
-                    onClose={()=>this.setState({isOverlayVisible: false})}
+                    onClose={() => this.setState({ isOverlayVisible: false })}
                     renderFooter={(currentImage) => (<View><Text>{currentImage['count']}</Text></View>)}
                 />
-                <TouchableOpacity
-                    style={{ justifyContent: 'center', alignItems: 'center' }}
-                    onPress={() => this.setState({ isOverlayVisible: true })}
-                >
-                    <FastImage
-                        source={{
-                            uri: status['media_attachments'][0]['preview_url'],
-                            priority: FastImage.priority.normal,
-                        }}
-                        style={{ width: 300, height: 300, margin: 20 }}
-                        resizeMode={FastImage.resizeMode.contain}
-                        PlaceholderContent={<ActivityIndicator />}
-                    />
-                </TouchableOpacity>
+                <View style={{ justifyContent: 'center', alignItems: 'center', margin: 20}}>
+                    <TouchableOpacity onPress={() => this.setState({ isOverlayVisible: true })}>
+                        <FastImage
+                            source={{
+                                uri: status['media_attachments'][0]['preview_url'],
+                                priority: FastImage.priority.normal,
+                            }}
+                            style={{ width: 300, height: 300 }}
+                            PlaceholderContent={<ActivityIndicator />}
+                        />
+                    </TouchableOpacity>
+                </View>
             </View>
         );
     }
 
     render() {
+
+        this.setState({ displayStatus: this.props.status['reblog'] ? this.props.status['reblog'] : this.props.status });
 
         return (
             <Card containerStyle={{ margin: 0, backgroundColor: this.props.color }}>
@@ -150,9 +150,9 @@ export default class StatusDisplay extends React.PureComponent {
 
                             <TouchableOpacity
                                 style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}
-                                onPress={()=>{
+                                onPress={() => {
                                     this.props.M.toggleFavorite(this.state.displayStatus)
-                                        .then((newStatus)=>{
+                                        .then((newStatus) => {
                                             this.props.status['favourited'] = newStatus['favourited'];
                                             this.setState({
                                                 displayStatus: newStatus,

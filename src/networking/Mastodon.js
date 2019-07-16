@@ -152,7 +152,7 @@ export default class Mastodon {
                 params: options,
             }
         );
-        return response;
+        return response['data'];
     }
 
     /**
