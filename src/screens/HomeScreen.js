@@ -96,6 +96,7 @@ export default class HomeScreen extends React.Component {
         return (
 
             <View style={{ flex: 1 }}>
+                <Text>{M.accessToken}</Text>
                 <FlatList
                     style={{ flex: 1 }}
                     data={this.state.timeline}
@@ -103,10 +104,11 @@ export default class HomeScreen extends React.Component {
                     refreshing={this.state.isRefreshing}
                     renderItem={({item}) => (
                         <TouchableOpacity onPress={()=>{
+                            const displayStatus = item['reblog'] ? item['reblog'] : item;
                             this.props.navigation.navigate({
                                 routeName: 'StatusScreen',
-                                params: {M: M, status: item},
-                                key: item['id'],
+                                params: {M: M, id: displayStatus['id']},
+                                key: displayStatus['id'],
                             });
                         }}>
                             <StatusDisplay M={M} status={item} isShowTopText={true} />

@@ -189,7 +189,10 @@ export default class Mastodon {
         return response['data'];
     }
 
-
+    /**
+     * Gets status by id
+     * @param {string} id 
+     */
     async getStatus(id){
         const response = await axios.get(
             `https://${this.baseurl}/api/v1/statuses/${id}`,
@@ -197,6 +200,33 @@ export default class Mastodon {
                 headers: {'Authorization': `Bearer ${this.accessToken}`},
             }
         );
+        return response['data'];
+    }
+
+    async toggleFavorite(status){
+
+        const id = status['id'];
+
+        let response = null;
+        if(status['favourited']){
+            response = await axios.post(
+                `https://${this.baseurl}/api/v1/statuses/${id}/unfavourite`,
+                null,
+                {
+                    headers: {'Authorization': `Bearer ${this.accessToken}`},
+                }
+            );
+        }
+        else{
+            response = await axios.post(
+                `https://${this.baseurl}/api/v1/statuses/${id}/favourite`,
+                null,
+                {
+                    headers: {'Authorization': `Bearer ${this.accessToken}`},
+                }
+            );
+        }
+
         return response['data'];
     }
 }

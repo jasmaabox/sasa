@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { View, Dimensions, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, Dimensions, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
 import { Avatar, Card, Text, Overlay, Button } from 'react-native-elements';
 import HTML from 'react-native-render-html';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -16,8 +16,10 @@ export default class StatusDisplay extends React.PureComponent {
 
     constructor(props) {
         super(props);
+
         this.state = {
             isOverlayVisible: false,
+            displayStatus: this.props.status['reblog'] ? this.props.status['reblog'] : this.props.status,
         };
     }
 
@@ -101,9 +103,6 @@ export default class StatusDisplay extends React.PureComponent {
 
     render() {
 
-        // Switch status if reblog
-        const displayStatus = this.props.status['reblog'] ? this.props.status['reblog'] : this.props.status;
-
         return (
             <Card containerStyle={{ margin: 0, backgroundColor: this.props.color }}>
 
@@ -114,7 +113,7 @@ export default class StatusDisplay extends React.PureComponent {
                         size="medium"
                         rounded
                         source={{
-                            uri: displayStatus['account']['avatar']
+                            uri: this.state.displayStatus['account']['avatar']
                         }}
                     />
 
@@ -122,36 +121,47 @@ export default class StatusDisplay extends React.PureComponent {
 
                         <View style={{ flexDirection: 'row' }}>
                             <Text numberOfLines={1} style={{ flex: 1 }}>
-                                <Text>{displayStatus['account']['display_name'] ? displayStatus['account']['display_name'] + ' ' : ''}</Text>
-                                <Text style={{ color: 'grey' }}>@{displayStatus['account']['username']}</Text>
+                                <Text>{this.state.displayStatus['account']['display_name'] ? this.state.displayStatus['account']['display_name'] : this.state.displayStatus['account']['username']}</Text>
+                                <Text style={{ color: 'grey' }}> @{this.state.displayStatus['account']['username']}</Text>
                             </Text>
                             <Text style={{ color: 'grey' }}> {getTimePassedStr(new Date(this.props.status['created_at']))}</Text>
                         </View>
 
                         <HTML
-                            html={`<div>${displayStatus['content']}</div>`}
+                            html={`<div>${this.state.displayStatus['content']}</div>`}
                             imagesMaxWidth={Dimensions.get('window').width}
                             onLinkPress={(event, href) => {
                                 this.props.M.openURL(href);
                             }}
                         />
 
-                        {this.renderImageDisplay(displayStatus)}
+                        {this.renderImageDisplay(this.state.displayStatus)}
 
                         <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginRight: 50 }}>
                             <TouchableOpacity style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
                                 <Icon name="reply" size={15} color='grey' />
-                                <Text style={{ color: 'grey' }}> {this.props.status['replies_count']}</Text>
+                                <Text style={{ color: 'grey' }}> {this.state.displayStatus['replies_count']}</Text>
                             </TouchableOpacity>
 
                             <TouchableOpacity style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
                                 <Icon name="retweet" size={15} color={this.props.status['reblogged'] ? 'lightgreen' : 'grey'} />
-                                <Text style={{ color: this.props.status['reblogged'] ? 'lightgreen' : 'grey' }}> {this.props.status['reblogs_count']}</Text>
+                                <Text style={{ color: this.state.displayStatus['reblogged'] ? 'lightgreen' : 'grey' }}> {this.state.displayStatus['reblogs_count']}</Text>
                             </TouchableOpacity>
 
-                            <TouchableOpacity style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-                                <Icon name="star" size={15} color={this.props.status['favourited'] ? 'gold' : 'grey'} />
-                                <Text style={{ color: this.props.status['favourited'] ? 'gold' : 'grey' }}> {this.props.status['favourites_count']}</Text>
+                            <TouchableOpacity
+                                style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}
+                                onPress={()=>{
+                                    this.props.M.toggleFavorite(this.state.displayStatus)
+                                        .then((newStatus)=>{
+                                            this.props.status['favourited'] = newStatus['favourited'];
+                                            this.setState({
+                                                displayStatus: newStatus,
+                                            });
+                                        });
+                                }}
+                            >
+                                <Icon name="star" size={15} color={this.state.displayStatus['favourited'] ? 'gold' : 'grey'} />
+                                <Text style={{ color: this.state.displayStatus['favourited'] ? 'gold' : 'grey' }}> {this.state.displayStatus['favourites_count']}</Text>
                             </TouchableOpacity>
 
                             <TouchableOpacity style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
