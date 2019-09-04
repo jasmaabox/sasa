@@ -9,8 +9,8 @@ import StatusDisplay from '../components/StatusDisplay.js';
  * Home screen timeline
  */
 export default class HomeScreen extends React.Component {
-    
-    constructor(props){
+
+    constructor(props) {
         super(props);
 
         this.props.removeClippedSubviews = true;
@@ -24,23 +24,23 @@ export default class HomeScreen extends React.Component {
 
     componentDidMount() {
         // Disable back button
-        BackHandler.addEventListener('hardwareBackPress', ()=>{return true});
+        BackHandler.addEventListener('hardwareBackPress', () => { return true });
 
         this.initTimeline(this.state.timelineName);
-	}
-	
+    }
+
     componentWillUnmount() {
-        BackHandler.removeEventListener('hardwareBackPress', ()=>{return true});
+        BackHandler.removeEventListener('hardwareBackPress', () => { return true });
     }
 
     /**
      * Init timline
      * @param {string} timeline 
      */
-    async initTimeline(timeline){
-        const {navigation} = this.props;
+    async initTimeline(timeline) {
+        const { navigation } = this.props;
         const M = navigation.getParam('M');
-        
+
         const result = await M.getTimeline(timeline);
         this.setState({
             timeline: result,
@@ -51,9 +51,9 @@ export default class HomeScreen extends React.Component {
     /**
      * Re-inits timeline on refresh
      */
-    onRefresh(){
+    onRefresh() {
         this.setState({
-            //timeline: [],
+            timeline: [],
             isRefreshing: true,
         });
         this.initTimeline(this.state.timelineName);
@@ -62,9 +62,9 @@ export default class HomeScreen extends React.Component {
     /**
      * Updates timeline with more statuses
      */
-    fetchMore(){
+    fetchMore() {
 
-        if(this.state.isRefreshing){
+        if (this.state.isRefreshing) {
             return null;
         }
 
@@ -73,12 +73,12 @@ export default class HomeScreen extends React.Component {
                 return { isRefreshing: true };
             },
             () => {
-                const {navigation} = this.props;
+                const { navigation } = this.props;
                 let M = navigation.getParam('M');
-                let maxId = this.state.timeline[this.state.timeline.length-1]['id'];
+                let maxId = this.state.timeline[this.state.timeline.length - 1]['id'];
 
-                M.getTimeline(this.state.timelineName, {max_id: maxId})
-                    .then((res)=>{
+                M.getTimeline(this.state.timelineName, { max_id: maxId })
+                    .then((res) => {
                         const newTimeline = this.state.timeline.concat(res);
                         this.setState({
                             timeline: newTimeline,
@@ -89,9 +89,9 @@ export default class HomeScreen extends React.Component {
         );
     }
 
-    render(){
+    render() {
 
-        const {navigation} = this.props;
+        const { navigation } = this.props;
         const M = navigation.getParam('M');
 
         return (
@@ -103,32 +103,33 @@ export default class HomeScreen extends React.Component {
                     data={this.state.timeline}
                     onRefresh={() => this.onRefresh()}
                     refreshing={this.state.isRefreshing}
-                    renderItem={({item}) => (
-                        <TouchableOpacity onPress={()=>{
-                            const displayStatus = item['reblog'] ? item['reblog'] : item;
+                    renderItem={({ item }) => (
+                        <TouchableOpacity onPress={() => {
                             this.props.navigation.navigate({
                                 routeName: 'StatusScreen',
                                 params: {
                                     M: M,
-                                    id: displayStatus['id'],
-                                    onGoBack: ()=>{
+                                    id: item['id'],
+                                    onGoBack: () => {
+                                        // fix me
+                                        // Update status going back
                                         M.getStatus(item['id'])
-                                            .then((newStatus)=>{
+                                            .then((newStatus) => {
                                                 const idx = this.state.timeline.findIndex(obj => obj['id'] == item['id']);
                                                 this.state.timeline[idx] = newStatus;
-                                            
+
                                                 this.setState({ timeline: this.state.timeline });
                                             });
                                     },
                                 },
-                                key: displayStatus['id'],
+                                key: item['id'],
                             });
                         }}>
                             <StatusDisplay M={M} status={item} isShowTopText={true} />
                         </TouchableOpacity>
                     )}
                     onEndReachedThreshold={0.1}
-                    onEndReached={()=>this.fetchMore()}
+                    onEndReached={() => this.fetchMore()}
                 />
             </View>
         );

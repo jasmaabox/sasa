@@ -76,7 +76,7 @@ export default class StatusScreen extends React.PureComponent {
                 style={{ flex: 1 }}
             >
                 <ScrollView>
-                    <StatusDisplay M={M} status={this.state.status} isShowTopText={true} />
+                    <StatusDisplay M={M} status={this.state.status} />
                     <Divider style={{ backgroundColor: 'lightgray', height: 5 }} />
                     <FlatList
                         style={{ flex: 1 }}

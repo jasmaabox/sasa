@@ -203,12 +203,24 @@ export default class Mastodon {
         return response['data'];
     }
 
+    /**
+     * Toggle favorite on status
+     * @param {string} status 
+     */
     async toggleFavorite(status){
 
         const id = status['id'];
 
         let response = null;
         if(status['favourited']){
+            // Need to post unfavorite twice
+            await axios.post(
+                `https://${this.baseurl}/api/v1/statuses/${id}/unfavourite`,
+                null,
+                {
+                    headers: {'Authorization': `Bearer ${this.accessToken}`},
+                }
+            );
             response = await axios.post(
                 `https://${this.baseurl}/api/v1/statuses/${id}/unfavourite`,
                 null,
